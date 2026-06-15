@@ -1,0 +1,13 @@
+{
+  "name": "nima-site",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler pages dev public --ip 0.0.0.0 --port 8788",
+    "preview": "wrangler pages dev public --ip 0.0.0.0 --port 8788",
+    "deploy": "wrangler pages deploy public --project-name nima-site"
+  },
+  "devDependencies": {
+    "wrangler": "^4.100.0"
+  }
+}
