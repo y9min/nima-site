@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#001f12">
+    <meta name="description" content="Contact nima support for help with billing, subscriptions, bugs, or feature requests.">
+    <title>Contact | nima</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <main class="content-page">
+      <div class="content-wrap">
+        <header class="content-header">
+          <a class="content-logo" href="./" aria-label="nima home">
+            <img src="./assets/nima-wordmark.png" alt="nima">
+          </a>
+          <p class="content-kicker">Support</p>
+          <h1>Contact</h1>
+          <p>Send a support request or use a faster link for common account and billing tasks.</p>
+        </header>
+
+        <section class="content-grid four-up quick-links" aria-label="Fast support links">
+          <a class="info-card" href="./cancel">
+            <span class="card-label">Billing</span>
+            <h2>Cancel</h2>
+            <p>Find the right cancellation steps for your subscription.</p>
+          </a>
+          <a class="info-card" href="./manage">
+            <span class="card-label">Account</span>
+            <h2>Manage</h2>
+            <p>Find subscription management instructions.</p>
+          </a>
+          <a class="info-card" href="./help">
+            <span class="card-label">Support</span>
+            <h2>Help</h2>
+            <p>Read setup and troubleshooting guidance.</p>
+          </a>
+          <a class="info-card" href="./faq">
+            <span class="card-label">Answers</span>
+            <h2>FAQ</h2>
+            <p>Review common questions before sending a message.</p>
+          </a>
+        </section>
+
+        <section class="content-panel split-panel" aria-labelledby="contact-form-title">
+          <div>
+            <p class="content-kicker">Message</p>
+            <h2 id="contact-form-title">Contact support</h2>
+            <p>This site is static, so this form shows a local confirmation instead of sending to a server. For bug reports, include your device, OS version, app version, and screenshots if possible.</p>
+            <p>For billing questions, mention whether your subscription is through the App Store, Google Play, or direct billing.</p>
+          </div>
+          <form class="content-form" data-static-form data-success-message="Thanks. This static form cannot send yet, so please use your support email workflow with these details.">
+            <label for="contact-name">Name</label>
+            <input id="contact-name" name="name" type="text" autocomplete="name" placeholder="Your name" required>
+
+            <label for="contact-email">Email address</label>
+            <input id="contact-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" required>
+
+            <label for="contact-topic">Topic</label>
+            <select id="contact-topic" name="topic" required>
+              <option value="">Choose a topic</option>
+              <option>Support</option>
+              <option>Billing</option>
+              <option>Bug report</option>
+              <option>Feature request</option>
+              <option>Other</option>
+            </select>
+
+            <label for="contact-message">Message</label>
+            <textarea id="contact-message" name="message" rows="6" placeholder="How can we help?" required></textarea>
+
+            <p class="form-error" data-form-error role="alert"></p>
+            <p class="form-success" data-form-success role="status"></p>
+            <button type="submit">Prepare message</button>
+          </form>
+        </section>
+
+        <footer class="site-footer content-footer">
+          <nav aria-label="Legal links">
+            <h2>Legal</h2>
+            <a href="./privacy-policy">Privacy Policy</a>
+            <a href="./terms-and-conditions">Terms &amp; Conditions</a>
+          </nav>
+          <nav aria-label="Support links">
+            <h2>Support</h2>
+            <a href="./manage">Manage</a>
+            <a href="./help">Help</a>
+            <a href="./cancel">Cancel</a>
+          </nav>
+          <nav aria-label="More links">
+            <h2>More</h2>
+            <a href="./blog">Blog</a>
+            <a href="./faq">FAQ</a>
+            <a href="./contact">Contact</a>
+          </nav>
+        </footer>
+      </div>
+    </main>
+    <script src="./support-forms.js"></script>
+  </body>
+</html>

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#001f12">
+    <meta name="description" content="Manage your nima subscription or find the right subscription settings.">
+    <title>Manage | nima</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <main class="content-page">
+      <div class="content-wrap">
+        <header class="content-header">
+          <a class="content-logo" href="./" aria-label="nima home">
+            <img src="./assets/nima-wordmark.png" alt="nima">
+          </a>
+          <p class="content-kicker">Support</p>
+          <h1>Manage your subscription</h1>
+          <p>The right place to manage nima depends on how you subscribed.</p>
+        </header>
+
+        <section class="content-grid three-up" aria-label="Subscription management options">
+          <article class="info-card">
+            <span class="card-label">App Store</span>
+            <h2>Manage with Apple</h2>
+            <p>On iPhone, open Settings, tap your Apple ID, choose Subscriptions, then select nima.</p>
+          </article>
+          <article class="info-card">
+            <span class="card-label">Google Play</span>
+            <h2>Manage with Google</h2>
+            <p>When Android is available, open Google Play, tap your profile, then Payments &amp; subscriptions, Subscriptions, and nima.</p>
+          </article>
+          <article class="info-card">
+            <span class="card-label">Direct</span>
+            <h2>Request instructions</h2>
+            <p>If you subscribed directly, enter your email below and we will show the next steps for managing access.</p>
+          </article>
+        </section>
+
+        <section class="content-panel split-panel" aria-labelledby="direct-manage-title">
+          <div>
+            <p class="content-kicker">Direct subscription</p>
+            <h2 id="direct-manage-title">Find management instructions</h2>
+            <p>Use the same email you used for checkout. This static site cannot look up your account here, but it can point you to the correct support path.</p>
+          </div>
+          <form class="content-form" data-static-form data-success-message="If this email matches a direct subscription, use the contact page to request management instructions.">
+            <label for="manage-email">Email address</label>
+            <input id="manage-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" required>
+            <p class="form-error" data-form-error role="alert"></p>
+            <p class="form-success" data-form-success role="status"></p>
+            <button type="submit">Show next steps</button>
+          </form>
+        </section>
+
+        <section class="notice-panel">
+          <h2>Important</h2>
+          <p>Deleting nima from your phone does not cancel billing. Cancel from the App Store, Google Play, or the direct subscription path before your renewal date.</p>
+          <div class="link-row">
+            <a href="./cancel">Cancel subscription</a>
+            <a href="./help">Get help</a>
+            <a href="./contact">Contact support</a>
+          </div>
+        </section>
+
+        <footer class="site-footer content-footer">
+          <nav aria-label="Legal links">
+            <h2>Legal</h2>
+            <a href="./privacy-policy">Privacy Policy</a>
+            <a href="./terms-and-conditions">Terms &amp; Conditions</a>
+          </nav>
+          <nav aria-label="Support links">
+            <h2>Support</h2>
+            <a href="./manage">Manage</a>
+            <a href="./help">Help</a>
+            <a href="./cancel">Cancel</a>
+          </nav>
+          <nav aria-label="More links">
+            <h2>More</h2>
+            <a href="./blog">Blog</a>
+            <a href="./faq">FAQ</a>
+            <a href="./contact">Contact</a>
+          </nav>
+        </footer>
+      </div>
+    </main>
+    <script src="./support-forms.js"></script>
+  </body>
+</html>

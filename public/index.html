@@ -3,12 +3,173 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Nima Site</title>
+    <meta name="theme-color" content="#001f12">
+    <title>nima | keeping social media social</title>
+    <link rel="preload" as="image" href="./assets/nima-wordmark.png">
+    <link rel="preload" as="image" href="./assets/app-phone.png">
     <link rel="stylesheet" href="./styles.css">
   </head>
   <body>
-    <main>
-      <h1>test</h1>
+    <main class="page-shell">
+      <img class="shape shape-large" src="./assets/polygon-large.png" alt="" aria-hidden="true">
+      <img class="shape shape-small" src="./assets/polygon-small.png" alt="" aria-hidden="true">
+
+      <section class="landing" aria-labelledby="hero-title">
+        <header class="brand">
+          <img src="./assets/nima-wordmark.png" alt="nima">
+        </header>
+
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h1 id="hero-title">keeping social media <span>social.</span></h1>
+            <p>nima helps you take control of your habits and build healthier habits that actually stick</p>
+
+            <div class="store-buttons" aria-label="App download options">
+              <button class="store-badge store-badge-google" type="button" data-open-waitlist>
+                <img src="./assets/google-play-badge.png" alt="Get it on Google Play">
+              </button>
+              <a class="store-badge store-badge-apple" href="#" aria-label="Download on the App Store">
+                <img src="./assets/app-store-badge.png" alt="Download on the App Store">
+              </a>
+            </div>
+          </div>
+
+          <div class="phone-wrap">
+            <img class="phone-art" src="./assets/app-phone.png" alt="nima app home screen showing blocked short-form feeds and an 8 day streak">
+          </div>
+        </div>
+
+        <section class="feature-promo" aria-label="nima features">
+          <div class="features">
+            <article class="feature-card">
+              <img class="feature-icon" src="./assets/icon-block.png" alt="" aria-hidden="true">
+              <div>
+                <h2>block addictive feeds</h2>
+                <p>choose what to block and take back control</p>
+              </div>
+            </article>
+            <article class="feature-card">
+              <img class="feature-icon" src="./assets/icon-time.png" alt="" aria-hidden="true">
+              <div>
+                <h2>limit your time</h2>
+                <p>set daily limits and stick to what matters</p>
+              </div>
+            </article>
+            <article class="feature-card">
+              <img class="feature-icon" src="./assets/icon-progress.png" alt="" aria-hidden="true">
+              <div>
+                <h2>track your progress</h2>
+                <p>see your streaks and improve every day</p>
+              </div>
+            </article>
+            <article class="feature-card">
+              <img class="feature-icon" src="./assets/icon-habits.png" alt="" aria-hidden="true">
+              <div>
+                <h2>build better habits</h2>
+                <p>replace mindless scrolling with mindful living</p>
+              </div>
+            </article>
+          </div>
+
+          <aside class="promo-card" aria-label="Turn scrolling off">
+            <img src="./assets/social-card.png" alt="Turn scrolling off. Not your social life.">
+          </aside>
+        </section>
+
+        <footer class="site-footer">
+          <nav aria-label="Legal links">
+            <h2>Legal</h2>
+            <a href="./privacy-policy">Privacy Policy</a>
+            <a href="./terms-and-conditions">Terms &amp; Conditions</a>
+          </nav>
+          <nav aria-label="Support links">
+            <h2>Support</h2>
+            <a href="./manage">Manage</a>
+            <a href="./help">Help</a>
+            <a href="./cancel">Cancel</a>
+          </nav>
+          <nav aria-label="More links">
+            <h2>More</h2>
+            <a href="./blog">Blog</a>
+            <a href="./faq">FAQ</a>
+            <a href="./contact">Contact</a>
+          </nav>
+        </footer>
+      </section>
     </main>
+
+    <div class="modal" data-waitlist-modal aria-hidden="true">
+      <div class="modal-backdrop" data-close-waitlist></div>
+      <section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="waitlist-title" aria-describedby="waitlist-copy">
+        <button class="modal-close" type="button" data-close-waitlist aria-label="Close waitlist form">×</button>
+        <div class="modal-content" data-form-state>
+          <h2 id="waitlist-title">Android is coming soon</h2>
+          <p id="waitlist-copy">Enter your email to join the Google Play waitlist.</p>
+          <form class="waitlist-form" data-waitlist-form novalidate>
+            <label for="waitlist-email">Email address</label>
+            <input id="waitlist-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" required>
+            <p class="form-error" data-form-error role="alert"></p>
+            <button type="submit">Join waitlist</button>
+          </form>
+        </div>
+        <div class="modal-content modal-success" data-success-state hidden>
+          <h2>You’re on the waitlist</h2>
+          <p>We’ll let you know when nima is ready for Android.</p>
+          <button type="button" data-close-waitlist>Done</button>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      const modal = document.querySelector("[data-waitlist-modal]");
+      const openButtons = document.querySelectorAll("[data-open-waitlist]");
+      const closeButtons = document.querySelectorAll("[data-close-waitlist]");
+      const form = document.querySelector("[data-waitlist-form]");
+      const emailInput = document.querySelector("#waitlist-email");
+      const error = document.querySelector("[data-form-error]");
+      const formState = document.querySelector("[data-form-state]");
+      const successState = document.querySelector("[data-success-state]");
+
+      function openModal() {
+        modal.classList.add("is-open");
+        modal.setAttribute("aria-hidden", "false");
+        document.body.classList.add("modal-open");
+        formState.hidden = false;
+        successState.hidden = true;
+        form.reset();
+        error.textContent = "";
+        setTimeout(() => emailInput.focus(), 0);
+      }
+
+      function closeModal() {
+        modal.classList.remove("is-open");
+        modal.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("modal-open");
+      }
+
+      openButtons.forEach((button) => button.addEventListener("click", openModal));
+      closeButtons.forEach((button) => button.addEventListener("click", closeModal));
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && modal.classList.contains("is-open")) {
+          closeModal();
+        }
+      });
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const email = emailInput.value.trim();
+        const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+        if (!validEmail) {
+          error.textContent = "Enter a valid email address.";
+          emailInput.focus();
+          return;
+        }
+
+        formState.hidden = true;
+        successState.hidden = false;
+      });
+    </script>
   </body>
 </html>
