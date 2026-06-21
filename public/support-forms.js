@@ -27,6 +27,16 @@ staticForms.forEach((form) => {
       return;
     }
 
+    if (form.dataset.mailto) {
+      const formData = new FormData(form);
+      const subject = form.dataset.mailSubject || "Support request";
+      const body = Array.from(formData.entries())
+        .map(([name, value]) => `${name}: ${value}`)
+        .join("\n\n");
+
+      window.location.href = `mailto:${form.dataset.mailto}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    }
+
     success.textContent = form.dataset.successMessage || "Thanks. Your details are ready.";
     form.reset();
   });
