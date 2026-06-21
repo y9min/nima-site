@@ -660,6 +660,19 @@ a {
   margin-top: 26px;
 }
 
+.legal-copy ul {
+  display: grid;
+  gap: 10px;
+  margin: 12px 0 0;
+  padding-left: 22px;
+}
+
+.legal-copy li {
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 17px;
+  line-height: 1.5;
+}
+
 .effective-date,
 .legal-note {
   color: var(--lime) !important;
