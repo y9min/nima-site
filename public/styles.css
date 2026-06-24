@@ -263,6 +263,15 @@ a {
   color: var(--lime);
 }
 
+.footer-company {
+  grid-column: 1 / -1;
+  margin: 16px 0 0;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 11px;
+  line-height: 1.4;
+  font-weight: 400;
+}
+
 .modal {
   position: fixed;
   inset: 0;
