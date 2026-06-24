@@ -1,0 +1,5 @@
+/login https://nima.so 301
+/dashboard https://nima.so 301
+/dashboard/* https://nima.so 301
+/api/* /404.html 404
+/auth/* /404.html 404
