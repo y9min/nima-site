@@ -114,10 +114,19 @@
   function generateData() {
     const weekRandom = rng(hashSeed(`${state.seed}-week`));
     const currentIndex = (new Date(`${state.date}T12:00:00`).getDay() + 6) % 7;
-    const comparisonBaseline = Math.min(state.minutes, 390);
+    const offsets = [];
+    for (let pair = 0; pair < 3; pair++) {
+      const difference = 45 + Math.floor(weekRandom() * 91);
+      offsets.push(difference, -difference);
+    }
+    for (let i = offsets.length - 1; i > 0; i--) {
+      const target = Math.floor(weekRandom() * (i + 1));
+      [offsets[i], offsets[target]] = [offsets[target], offsets[i]];
+    }
+    let comparisonIndex = 0;
     const week = Array.from({length:7}, (_, i) => i === currentIndex
       ? state.minutes
-      : Math.max(15, Math.min(470, Math.round(comparisonBaseline * (.65 + weekRandom() * .4)))));
+      : Math.max(1, Math.min(1439, state.minutes + offsets[comparisonIndex++])));
     const selectedMinutes = week[selectedIndex];
     const random = rng(hashSeed(`${state.seed}-day-${selectedIndex}`));
     const apps = appProfiles[state.profile];
