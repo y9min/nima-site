@@ -1,0 +1,9 @@
+{
+  "name": "Nima Screen Time Generator",
+  "short_name": "Screen Time",
+  "start_url": "/generator/",
+  "scope": "/generator/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000"
+}
