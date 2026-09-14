@@ -61,6 +61,7 @@
       name: (params.get("name") || "Ella’s iPhone").slice(0, 24),
       minutes,
       profile: appProfiles[params.get("profile")] ? params.get("profile") : "social",
+      theme: params.get("theme") === "light" ? "light" : "dark",
       date: /^\d{4}-\d{2}-\d{2}$/.test(params.get("date") || "") ? params.get("date") : today,
       seed: Number(params.get("seed")) || hashSeed(`${minutes}-${today}-social`)
     };
@@ -149,6 +150,9 @@
   }
 
   function render() {
+    document.documentElement.dataset.theme = state.theme;
+    $("meta[name='theme-color']").content = state.theme === "light" ? "#f2f2f7" : "#000000";
+    $("meta[name='apple-mobile-web-app-status-bar-style']").content = state.theme === "light" ? "default" : "black";
     const data = generateData();
     const date = getWeekDate(selectedIndex);
     const selectedDate = localDateValue(date);
@@ -210,7 +214,7 @@
   }
 
   function updateUrl() {
-    const next = new URLSearchParams({ minutes: state.minutes, profile: state.profile, date: state.date, seed: state.seed, name: state.name, day: selectedIndex });
+    const next = new URLSearchParams({ minutes: state.minutes, profile: state.profile, theme: state.theme, date: state.date, seed: state.seed, name: state.name, day: selectedIndex });
     if (view === "week") next.set("view", "week");
     history.replaceState(null, "", `${location.pathname}?${next}`);
   }
@@ -220,6 +224,7 @@
     $("#hours-input").value = Math.floor(state.minutes / 60);
     $("#minutes-input").value = state.minutes % 60;
     $("#profile-input").value = state.profile;
+    $("#theme-input").checked = state.theme === "light";
     $("#date-input").value = state.date;
     $("#editor").classList.add("open");
     $("#editor").setAttribute("aria-hidden", "false");
@@ -233,12 +238,18 @@
     event.preventDefault();
     const hours = Math.max(0, Math.min(23, Number($("#hours-input").value) || 0));
     const minutes = Math.max(0, Math.min(59, Number($("#minutes-input").value) || 0));
+    const nextName = $("#name-input").value.trim() || "Ella’s iPhone";
+    const nextMinutes = Math.max(1, hours * 60 + minutes);
+    const nextProfile = $("#profile-input").value;
+    const nextDate = $("#date-input").value || localDateValue(new Date());
+    const generationChanged = nextName !== state.name || nextMinutes !== state.minutes || nextProfile !== state.profile || nextDate !== state.date;
     state = {
-      name: $("#name-input").value.trim() || "Ella’s iPhone",
-      minutes: Math.max(1, hours * 60 + minutes),
-      profile: $("#profile-input").value,
-      date: $("#date-input").value || localDateValue(new Date()),
-      seed: Math.floor(Math.random() * 2147483647)
+      name: nextName,
+      minutes: nextMinutes,
+      profile: nextProfile,
+      theme: $("#theme-input").checked ? "light" : "dark",
+      date: nextDate,
+      seed: generationChanged ? Math.floor(Math.random() * 2147483647) : state.seed
     };
     selectedIndex = (new Date(`${state.date}T12:00:00`).getDay() + 6) % 7;
     render(); closeEditor(); toast("New Screen Time generated");

@@ -8,8 +8,15 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Screen Time">
     <title>Screen Time Generator — nima</title>
+    <script>
+      if (new URLSearchParams(location.search).get("theme") === "light") {
+        document.documentElement.dataset.theme = "light";
+        document.querySelector('meta[name="theme-color"]').content = "#f2f2f7";
+        document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]').content = "default";
+      }
+    </script>
     <link rel="manifest" href="./manifest.webmanifest">
-    <link rel="stylesheet" href="./generator.css?v=8">
+    <link rel="stylesheet" href="./generator.css?v=10">
   </head>
   <body>
     <main class="screen" aria-label="Screen Time replica">
@@ -105,6 +112,10 @@
               <option value="productive">Productive</option>
             </select>
           </label>
+          <label class="theme-field" for="theme-input">
+            <span>Light mode</span>
+            <input id="theme-input" type="checkbox" role="switch">
+          </label>
           <label>Date<input id="date-input" type="date"></label>
           <button class="generate-button" type="submit">Generate</button>
         </form>
@@ -112,6 +123,6 @@
     </div>
 
     <div class="toast" id="toast" role="status"></div>
-    <script src="./generator.js?v=8"></script>
+    <script src="./generator.js?v=10"></script>
   </body>
 </html>
