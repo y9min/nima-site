@@ -106,10 +106,16 @@ body { overscroll-behavior-y: none; }
 .section-heading h2 { margin: 0; }
 .section-heading button { padding: 0; border: 0; background: transparent; color: var(--blue); font-size: 17px; font-weight: 560; }
 .app-list { border-radius: 27px; }
-.app-row-main { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.app-list .app-usage-row { position: relative; min-height: 68px; border-bottom: 0; display: grid; grid-template-columns: 31px minmax(0, 1fr) auto; column-gap: 10px; align-items: center; }
+.app-list .app-usage-row:not(:last-child)::after { content: ""; position: absolute; left: 41px; right: 0; bottom: 0; border-bottom: 1px solid #38383a; }
 .app-icon { width: 31px; height: 31px; display: grid; place-items: center; border-radius: 8px; color: #fff; font-size: 15px; font-weight: 700; box-shadow: inset 0 0 0 .5px rgba(255,255,255,.2); }
 .app-icon:is(img) { display: block; object-fit: cover; }
-.app-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.app-details { min-width: 0; display: grid; gap: 5px; }
+.app-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 17px; line-height: 1.05; }
+.usage-line { min-width: 0; display: flex; align-items: center; gap: 7px; }
+.usage-bar { display: block; flex: 0 0 auto; height: 6px; min-width: 6px; border-radius: 4px; background: #48484a; }
+.usage-time { color: #66666d; font-size: 15px; line-height: 1; white-space: nowrap; }
+.row-chevron { color: #5d5d62; font-size: 31px; line-height: 1; font-style: normal; }
 .customize-button { width: calc(100% - 34px); margin: 25px 17px 0; min-height: 48px; border: 0; border-radius: 15px; background: #152238; color: var(--blue); font-weight: 620; font-size: 16px; }
 .nima-mark { color: #48484a; font-size: 12px; text-align: center; margin: 12px 0 0; }
 
@@ -187,6 +193,10 @@ html[data-theme="light"] .day-letter, html[data-theme="light"] .week-axis, html[
 html[data-theme="light"] .day-column[aria-pressed="true"] .day-letter { color: #000; }
 html[data-theme="light"] .ios-list button { border-color: #e5e5ea; }
 html[data-theme="light"] .ios-list button:active { background: #e5e5ea; }
+html[data-theme="light"] .app-list .app-usage-row:not(:last-child)::after { border-color: #e5e5ea; }
+html[data-theme="light"] .usage-bar { background: #d1d1d6; }
+html[data-theme="light"] .usage-time { color: #aeaeb2; }
+html[data-theme="light"] .row-chevron { color: #c7c7cc; }
 html[data-theme="light"] .row-value { color: #8e8e93; }
 html[data-theme="light"] .row-value i { color: #c7c7cc; }
 html[data-theme="light"] .customize-button { background: #e5f1ff; }

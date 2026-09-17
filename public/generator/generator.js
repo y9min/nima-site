@@ -203,11 +203,13 @@
     $("#categories").innerHTML = cats.map(([cls, name, minutes]) => `<div class="category ${cls}"><strong>${name}</strong><span>${formatMinutes(minutes)}</span></div>`).join("");
 
     const list = categoryMode ? cats.map(([cls, name, minutes]) => ({name, minutes, color: cls === "social" ? "#0a84ff" : cls === "work" ? "#18c8d1" : "#ff9f2f", glyph: ""})) : data.appData;
+    const maximumUsage = Math.max(1, ...list.map((app) => app.minutes));
     $("#app-list").innerHTML = list.map((app) => {
       const icon = app.icon
         ? `<img class="app-icon" src="./assets/app-icons/${app.icon}" alt="">`
         : `<i class="app-icon" style="background:${app.color};color:${app.color === "#fff" || app.color === "#f5f5f5" ? "#111" : "#fff"}">${app.glyph || ""}</i>`;
-      return `<button><span class="app-row-main">${icon}<span class="app-name">${app.name}</span></span><span class="row-value">${formatMinutes(app.minutes)} <i>›</i></span></button>`;
+      const barWidth = Math.max(4, app.minutes / maximumUsage * 72);
+      return `<button class="app-usage-row">${icon}<span class="app-details"><span class="app-name">${app.name}</span><span class="usage-line"><i class="usage-bar" style="width:${barWidth}%"></i><span class="usage-time">${formatMinutes(app.minutes)}</span></span></span><i class="row-chevron">›</i></button>`;
     }).join("");
     $("#category-toggle").textContent = categoryMode ? "Show Apps" : "Show Categories";
     updateUrl();
