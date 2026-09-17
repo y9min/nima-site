@@ -133,6 +133,7 @@ body { overscroll-behavior-y: none; }
 #generator-form label { color: #aaaab0; font-size: 13px; }
 #generator-form input, #generator-form select { width: 100%; margin-top: 6px; border: 0; outline: 0; border-radius: 12px; background: #2c2c2e; color: #fff; padding: 13px; font-size: 16px; }
 .time-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.randomize-time-button { min-height: 44px; border: 0; border-radius: 12px; background: #2c2c2e; color: var(--blue); font-size: 16px; font-weight: 600; }
 .theme-field { min-height: 48px; padding: 0 13px; border-radius: 12px; background: #2c2c2e; display: flex; align-items: center; justify-content: space-between; }
 .theme-field span { color: #fff; font-size: 16px; }
 #generator-form .theme-field input { appearance: none; width: 51px; height: 31px; margin: 0; padding: 2px; border-radius: 16px; background: #3a3a3c; transition: background .18s ease; }
@@ -205,6 +206,7 @@ html[data-theme="light"] .sheet { background: #f2f2f7; }
 html[data-theme="light"] .sheet-title-row h2 { color: #000; }
 html[data-theme="light"] #generator-form label { color: #6e6e73; }
 html[data-theme="light"] #generator-form input, html[data-theme="light"] #generator-form select, html[data-theme="light"] .theme-field { background: #fff; color: #000; }
+html[data-theme="light"] .randomize-time-button { background: #fff; }
 html[data-theme="light"] .theme-field span { color: #000; }
 html[data-theme="light"] #generator-form .theme-field input { background: #e9e9ea; }
 html[data-theme="light"] #generator-form .theme-field input:checked { background: #34c759; }

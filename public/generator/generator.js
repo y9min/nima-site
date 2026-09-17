@@ -4,11 +4,18 @@
   const $ = (selector) => document.querySelector(selector);
   const params = new URLSearchParams(location.search);
   const colors = { social: "bar-social", work: "bar-work", other: "bar-other" };
+  const suspiciousAppPool = [
+    ["PolyBuzz", "Entertainment", .5, "#7357ff", "P", "polybuzz.jpg"],
+    ["Character.AI", "Entertainment", .5, "#111", "C", "character-ai.jpg"],
+    ["Grindr", "Social", .5, "#ffd629", "G", "grindr.jpg"],
+    ["Roblox", "Entertainment", .5, "#111", "R", "roblox.jpg"],
+    ["NordVPN", "Productivity & Finance", .5, "#477cf3", "N", "nordvpn.jpg"]
+  ];
   const appProfiles = {
     social: [
-      ["Instagram", "Social", 1.2, "#d62976", "IG", "instagram.jpg"], ["TikTok", "Social", 1.05, "#101010", "♪", "tiktok.jpg"],
-      ["X", "Social", .72, "#111", "𝕏", "x.jpg"], ["YouTube", "Entertainment", .58, "#f00", "▶", "youtube.jpg"],
-      ["Safari", "Productivity & Finance", .34, "#147efb", "◉", "safari.jpg"], ["Messages", "Social", .3, "#34c759", "●", "messages.jpg"]
+      ["TikTok", "Social", 1.9, "#101010", "♪", "tiktok.jpg"], ["Instagram", "Social", 1.15, "#d62976", "IG", "instagram.jpg"],
+      ["X", "Social", .26, "#111", "𝕏", "x.jpg"], ["YouTube", "Entertainment", .23, "#f00", "▶", "youtube.jpg"],
+      ["Messages", "Social", .17, "#34c759", "●", "messages.jpg"], ["Safari", "Productivity & Finance", .14, "#147efb", "◉", "safari.jpg"]
     ],
     balanced: [
       ["Safari", "Productivity & Finance", 1, "#147efb", "◉", "safari.jpg"], ["Messages", "Social", .85, "#34c759", "●", "messages.jpg"],
@@ -130,7 +137,11 @@
       : Math.max(1, Math.min(1439, state.minutes + offsets[comparisonIndex++])));
     const selectedMinutes = week[selectedIndex];
     const random = rng(hashSeed(`${state.seed}-day-${selectedIndex}`));
-    const apps = appProfiles[state.profile];
+    let apps = appProfiles[state.profile];
+    if (state.profile === "social") {
+      const suspiciousApp = suspiciousAppPool[hashSeed(`${state.seed}-sus-${selectedIndex}`) % suspiciousAppPool.length];
+      apps = [apps[0], apps[1], suspiciousApp, ...apps.slice(2)];
+    }
     const appMinutes = partition(selectedMinutes, apps, random);
     const appData = apps.map((app, i) => ({ name: app[0], category: app[1], minutes: appMinutes[i], color: app[3], glyph: app[4], icon: app[5] })).sort((a,b) => b.minutes-a.minutes);
     const hours = allocateHours(selectedMinutes, state.profile, random);
@@ -255,6 +266,13 @@
     };
     selectedIndex = (new Date(`${state.date}T12:00:00`).getDay() + 6) % 7;
     render(); closeEditor(); toast("New Screen Time generated");
+  });
+  $("#randomize-time").addEventListener("click", () => {
+    const value = new Uint32Array(1);
+    crypto.getRandomValues(value);
+    const totalMinutes = 60 + value[0] % 1140;
+    $("#hours-input").value = Math.floor(totalMinutes / 60);
+    $("#minutes-input").value = totalMinutes % 60;
   });
   $("#apply-editor").addEventListener("click", () => $("#generator-form").requestSubmit());
   $("#cancel-editor").addEventListener("click", closeEditor);
