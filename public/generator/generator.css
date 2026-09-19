@@ -116,8 +116,6 @@ body { overscroll-behavior-y: none; }
 .usage-bar { display: block; flex: 0 0 auto; height: 6px; min-width: 6px; border-radius: 4px; background: #48484a; }
 .usage-time { color: #66666d; font-size: 15px; line-height: 1; white-space: nowrap; }
 .row-chevron { color: #5d5d62; font-size: 31px; line-height: 1; font-style: normal; }
-.customize-button { width: calc(100% - 34px); margin: 25px 17px 0; min-height: 48px; border: 0; border-radius: 15px; background: #152238; color: var(--blue); font-weight: 620; font-size: 16px; }
-.nima-mark { color: #48484a; font-size: 12px; text-align: center; margin: 12px 0 0; }
 
 .sheet-wrap { position: fixed; inset: 0; z-index: 20; visibility: hidden; }
 .sheet-wrap.open { visibility: visible; }
@@ -200,8 +198,6 @@ html[data-theme="light"] .usage-time { color: #aeaeb2; }
 html[data-theme="light"] .row-chevron { color: #c7c7cc; }
 html[data-theme="light"] .row-value { color: #8e8e93; }
 html[data-theme="light"] .row-value i { color: #c7c7cc; }
-html[data-theme="light"] .customize-button { background: #e5f1ff; }
-html[data-theme="light"] .nima-mark { color: #aeaeb2; }
 html[data-theme="light"] .sheet { background: #f2f2f7; }
 html[data-theme="light"] .sheet-title-row h2 { color: #000; }
 html[data-theme="light"] #generator-form label { color: #6e6e73; }

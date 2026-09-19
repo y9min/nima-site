@@ -11,6 +11,7 @@
     ["Roblox", "Entertainment", .5, "#111", "R", "roblox.jpg"],
     ["NordVPN", "Productivity & Finance", .5, "#477cf3", "N", "nordvpn.jpg"]
   ];
+  const thirdAppIds = ["polybuzz", "character-ai", "grindr", "roblox", "nordvpn"];
   const appProfiles = {
     social: [
       ["TikTok", "Social", 1.9, "#101010", "♪", "tiktok.jpg"], ["Instagram", "Social", 1.15, "#d62976", "IG", "instagram.jpg"],
@@ -68,6 +69,7 @@
       name: (params.get("name") || "Ella’s iPhone").slice(0, 24),
       minutes,
       profile: appProfiles[params.get("profile")] ? params.get("profile") : "social",
+      thirdApp: thirdAppIds.includes(params.get("third")) ? params.get("third") : "random",
       theme: params.get("theme") === "light" ? "light" : "dark",
       date: /^\d{4}-\d{2}-\d{2}$/.test(params.get("date") || "") ? params.get("date") : today,
       seed: Number(params.get("seed")) || hashSeed(`${minutes}-${today}-social`)
@@ -136,23 +138,37 @@
       ? state.minutes
       : Math.max(1, Math.min(1439, state.minutes + offsets[comparisonIndex++])));
     const selectedMinutes = week[selectedIndex];
-    const random = rng(hashSeed(`${state.seed}-day-${selectedIndex}`));
     let apps = appProfiles[state.profile];
     if (state.profile === "social") {
-      const suspiciousApp = suspiciousAppPool[hashSeed(`${state.seed}-sus-${selectedIndex}`) % suspiciousAppPool.length];
+      const thirdIndex = state.thirdApp === "random"
+        ? hashSeed(`${state.seed}-sus`) % suspiciousAppPool.length
+        : thirdAppIds.indexOf(state.thirdApp);
+      const suspiciousApp = suspiciousAppPool[thirdIndex];
       apps = [apps[0], apps[1], suspiciousApp, ...apps.slice(2)];
     }
-    const appMinutes = partition(selectedMinutes, apps, random);
-    const appData = apps.map((app, i) => ({ name: app[0], category: app[1], minutes: appMinutes[i], color: app[3], glyph: app[4], icon: app[5] })).sort((a,b) => b.minutes-a.minutes);
-    const hours = allocateHours(selectedMinutes, state.profile, random);
-    const categoryTotals = { social: 0, work: 0, other: 0 };
-    appData.forEach((app) => {
-      if (app.category === "Social" || app.category === "Entertainment") categoryTotals.social += app.minutes;
-      else if (app.category === "Productivity & Finance") categoryTotals.work += app.minutes;
-      else categoryTotals.other += app.minutes;
+    const weeklyAppMinutes = Array(apps.length).fill(0);
+    let selectedAppMinutes;
+    let selectedRandom;
+    week.forEach((minutes, dayIndex) => {
+      const dayRandom = rng(hashSeed(`${state.seed}-day-${dayIndex}`));
+      const dayAppMinutes = partition(minutes, apps, dayRandom);
+      dayAppMinutes.forEach((amount, appIndex) => { weeklyAppMinutes[appIndex] += amount; });
+      if (dayIndex === selectedIndex) {
+        selectedAppMinutes = dayAppMinutes;
+        selectedRandom = dayRandom;
+      }
     });
-    if (!categoryTotals.other) { const moved = Math.max(2, Math.round(selectedMinutes * .01)); categoryTotals.other = moved; categoryTotals.social = Math.max(0, categoryTotals.social - moved); }
-    return { appData, hours, categoryTotals, week, currentIndex, selectedMinutes };
+    const toAppData = (minutes) => apps.map((app, i) => ({ name: app[0], category: app[1], minutes: minutes[i], color: app[3], glyph: app[4], icon: app[5] })).sort((a,b) => b.minutes-a.minutes);
+    const dayAppData = toAppData(selectedAppMinutes);
+    const weekAppData = toAppData(weeklyAppMinutes);
+    const hours = allocateHours(selectedMinutes, state.profile, selectedRandom);
+    const totalsFor = (appData) => appData.reduce((totals, app) => {
+      if (app.category === "Social" || app.category === "Entertainment") totals.social += app.minutes;
+      else if (app.category === "Productivity & Finance") totals.work += app.minutes;
+      else totals.other += app.minutes;
+      return totals;
+    }, { social: 0, work: 0, other: 0 });
+    return { dayAppData, weekAppData, hours, dayCategoryTotals: totalsFor(dayAppData), weekCategoryTotals: totalsFor(weekAppData), week, currentIndex, selectedMinutes };
   }
 
   function formatMinutes(minutes) {
@@ -165,6 +181,7 @@
     $("meta[name='theme-color']").content = state.theme === "light" ? "#f2f2f7" : "#000000";
     $("meta[name='apple-mobile-web-app-status-bar-style']").content = state.theme === "light" ? "default" : "black";
     const data = generateData();
+    const categoryTotals = view === "week" ? data.weekCategoryTotals : data.dayCategoryTotals;
     const date = getWeekDate(selectedIndex);
     const selectedDate = localDateValue(date);
     const today = localDateValue(new Date()) === selectedDate;
@@ -187,17 +204,17 @@
     $("#week-bars").innerHTML = data.week.map((minutes, i) => {
       const current = i === selectedIndex;
       const usedHeight = Math.min(100, minutes / maxWeek * 100);
-      const workRatio = data.categoryTotals.work / data.selectedMinutes;
-      const otherRatio = data.categoryTotals.other / data.selectedMinutes;
+      const workRatio = data.dayCategoryTotals.work / data.selectedMinutes;
+      const otherRatio = data.dayCategoryTotals.other / data.selectedMinutes;
       const label = getWeekDate(i).toLocaleDateString("en-GB", {weekday:"long",day:"numeric",month:"long"});
       return `<button class="day-column" data-day="${i}" aria-label="${label}, ${formatMinutes(minutes)}" aria-pressed="${current}"><span class="day-stack" style="height:${usedHeight}%">${current ? `<i class="bar-social" style="height:${Math.max(0, 100-workRatio*100-otherRatio*100)}%"></i><i class="bar-work" style="height:${workRatio*100}%"></i><i class="bar-other" style="height:${otherRatio*100}%"></i>` : `<i class="unused"></i>`}</span><i class="day-letter">${["M","T","W","T","F","S","S"][i]}</i></button>`;
     }).join("");
     $("#week-bars").querySelectorAll("[data-day]").forEach((button) => button.addEventListener("click", () => { selectedIndex = Number(button.dataset.day); render(); }));
 
     $("#hour-bars").innerHTML = data.hours.map((minutes, i) => {
-      let social = data.categoryTotals.social / data.selectedMinutes;
-      let work = data.categoryTotals.work / data.selectedMinutes;
-      let other = data.categoryTotals.other / data.selectedMinutes;
+      let social = data.dayCategoryTotals.social / data.selectedMinutes;
+      let work = data.dayCategoryTotals.work / data.selectedMinutes;
+      let other = data.dayCategoryTotals.other / data.selectedMinutes;
       if (i >= 9 && i <= 17) work *= 1.35;
       if (i >= 19 || i <= 1) social *= 1.2;
       const total = social + work + other;
@@ -207,13 +224,13 @@
     }).join("");
 
     const cats = [
-      ["social", "Social", data.categoryTotals.social],
-      ["work", "Productivity & Finance", data.categoryTotals.work],
-      ["other", "Other", data.categoryTotals.other]
+      ["social", "Social", categoryTotals.social],
+      ["work", "Productivity & Finance", categoryTotals.work],
+      ["other", "Other", categoryTotals.other]
     ];
     $("#categories").innerHTML = cats.map(([cls, name, minutes]) => `<div class="category ${cls}"><strong>${name}</strong><span>${formatMinutes(minutes)}</span></div>`).join("");
 
-    const list = categoryMode ? cats.map(([cls, name, minutes]) => ({name, minutes, color: cls === "social" ? "#0a84ff" : cls === "work" ? "#18c8d1" : "#ff9f2f", glyph: ""})) : data.appData;
+    const list = categoryMode ? cats.map(([cls, name, minutes]) => ({name, minutes, color: cls === "social" ? "#0a84ff" : cls === "work" ? "#18c8d1" : "#ff9f2f", glyph: ""})) : view === "week" ? data.weekAppData : data.dayAppData;
     const maximumUsage = Math.max(1, ...list.map((app) => app.minutes));
     $("#app-list").innerHTML = list.map((app) => {
       const icon = app.icon
@@ -228,6 +245,7 @@
 
   function updateUrl() {
     const next = new URLSearchParams({ minutes: state.minutes, profile: state.profile, theme: state.theme, date: state.date, seed: state.seed, name: state.name, day: selectedIndex });
+    if (state.thirdApp !== "random") next.set("third", state.thirdApp);
     if (view === "week") next.set("view", "week");
     history.replaceState(null, "", `${location.pathname}?${next}`);
   }
@@ -237,6 +255,8 @@
     $("#hours-input").value = Math.floor(state.minutes / 60);
     $("#minutes-input").value = state.minutes % 60;
     $("#profile-input").value = state.profile;
+    $("#third-app-input").value = state.thirdApp;
+    $("#third-app-field").hidden = state.profile !== "social";
     $("#theme-input").checked = state.theme === "light";
     $("#date-input").value = state.date;
     $("#editor").classList.add("open");
@@ -254,17 +274,19 @@
     const nextName = $("#name-input").value.trim() || "Ella’s iPhone";
     const nextMinutes = Math.max(1, hours * 60 + minutes);
     const nextProfile = $("#profile-input").value;
+    const nextThirdApp = $("#third-app-input").value;
     const nextDate = $("#date-input").value || localDateValue(new Date());
     const generationChanged = nextName !== state.name || nextMinutes !== state.minutes || nextProfile !== state.profile || nextDate !== state.date;
     state = {
       name: nextName,
       minutes: nextMinutes,
       profile: nextProfile,
+      thirdApp: nextThirdApp,
       theme: $("#theme-input").checked ? "light" : "dark",
       date: nextDate,
       seed: generationChanged ? Math.floor(Math.random() * 2147483647) : state.seed
     };
-    selectedIndex = (new Date(`${state.date}T12:00:00`).getDay() + 6) % 7;
+    if (generationChanged) selectedIndex = (new Date(`${state.date}T12:00:00`).getDay() + 6) % 7;
     render(); closeEditor(); toast("New Screen Time generated");
   });
   $("#randomize-time").addEventListener("click", () => {
@@ -275,16 +297,16 @@
     $("#minutes-input").value = totalMinutes % 60;
   });
   $("#apply-editor").addEventListener("click", () => $("#generator-form").requestSubmit());
+  $("#profile-input").addEventListener("change", () => { $("#third-app-field").hidden = $("#profile-input").value !== "social"; });
   $("#cancel-editor").addEventListener("click", closeEditor);
   $("#sheet-backdrop").addEventListener("click", closeEditor);
-  $("#customize-button").addEventListener("click", openEditor);
   $("#edit-trigger").addEventListener("click", openEditor);
   $("#screen-title").addEventListener("dblclick", openEditor);
   $("#day-tab").addEventListener("click", () => setView("day"));
   $("#week-tab").addEventListener("click", () => setView("week"));
   $("#category-toggle").addEventListener("click", () => { categoryMode = !categoryMode; render(); });
   $("#back-button").addEventListener("click", () => history.length > 1 ? history.back() : toast("Screen Time settings"));
-  $("#devices-button").addEventListener("click", () => toast(`${state.name} is selected`));
+  $("#devices-button").addEventListener("click", openEditor);
   document.addEventListener("keydown", (event) => { if (event.key === "Escape") closeEditor(); });
 
   const now = new Date();

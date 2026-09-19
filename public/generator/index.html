@@ -16,7 +16,7 @@
       }
     </script>
     <link rel="manifest" href="./manifest.webmanifest">
-    <link rel="stylesheet" href="./generator.css?v=12">
+    <link rel="stylesheet" href="./generator.css?v=13">
   </head>
   <body>
     <main class="screen" aria-label="Screen Time replica">
@@ -36,7 +36,7 @@
         <button class="device-title" id="edit-trigger" type="button" aria-label="Edit generator settings">
           <span id="device-name">Yamin’s iPhone</span><span class="tiny-icons">↕︎</span>
         </button>
-        <button class="devices-button" id="devices-button" type="button">Devices</button>
+        <button class="devices-button" id="devices-button" type="button" aria-label="Customize screen time">Devices</button>
       </nav>
 
       <div class="segment" role="tablist" aria-label="Time period">
@@ -84,8 +84,6 @@
           <div class="ios-list app-list" id="app-list"></div>
         </section>
 
-        <button class="customize-button" id="customize-button" type="button">Customize this result</button>
-        <p class="nima-mark">Generated with nima</p>
       </section>
     </main>
 
@@ -113,6 +111,16 @@
               <option value="productive">Productive</option>
             </select>
           </label>
+          <label id="third-app-field">Third app
+            <select id="third-app-input">
+              <option value="random">Random</option>
+              <option value="polybuzz">PolyBuzz</option>
+              <option value="character-ai">Character.AI</option>
+              <option value="grindr">Grindr</option>
+              <option value="roblox">Roblox</option>
+              <option value="nordvpn">NordVPN</option>
+            </select>
+          </label>
           <label class="theme-field" for="theme-input">
             <span>Light mode</span>
             <input id="theme-input" type="checkbox" role="switch">
@@ -124,6 +132,6 @@
     </div>
 
     <div class="toast" id="toast" role="status"></div>
-    <script src="./generator.js?v=12"></script>
+    <script src="./generator.js?v=13"></script>
   </body>
 </html>
