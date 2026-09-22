@@ -4,14 +4,18 @@
   const $ = (selector) => document.querySelector(selector);
   const params = new URLSearchParams(location.search);
   const colors = { social: "bar-social", work: "bar-work", other: "bar-other" };
-  const suspiciousAppPool = [
-    ["PolyBuzz", "Entertainment", .5, "#7357ff", "P", "polybuzz.jpg"],
-    ["Character.AI", "Entertainment", .5, "#111", "C", "character-ai.jpg"],
-    ["Grindr", "Social", .5, "#ffd629", "G", "grindr.jpg"],
-    ["Roblox", "Entertainment", .5, "#111", "R", "roblox.jpg"],
-    ["NordVPN", "Productivity & Finance", .5, "#477cf3", "N", "nordvpn.jpg"]
-  ];
-  const thirdAppIds = ["polybuzz", "character-ai", "grindr", "roblox", "nordvpn"];
+  const thirdApps = {
+    "polybuzz": ["PolyBuzz", "Entertainment", .5, "#7357ff", "P", "polybuzz.jpg"],
+    "character-ai": ["Character.AI", "Entertainment", .5, "#111", "C", "character-ai.jpg"],
+    "grindr": ["Grindr", "Social", .5, "#ffd629", "G", "grindr.jpg"],
+    "roblox": ["Roblox", "Entertainment", .5, "#111", "R", "roblox.jpg"],
+    "nordvpn": ["NordVPN", "Productivity & Finance", .5, "#477cf3", "N", "nordvpn.jpg"],
+    "reddit": ["Reddit", "Social", .5, "#ff4500", "r", "reddit.jpg"],
+    "x": ["X", "Social", .5, "#111", "𝕏", "x.jpg"],
+    "nima": ["nima", "Productivity & Finance", .5, "#4c956c", "n", "nima.jpg"]
+  };
+  const randomThirdAppIds = ["polybuzz", "character-ai", "grindr", "roblox", "nordvpn", "reddit", "x"];
+  const thirdAppIds = [...randomThirdAppIds, "nima"];
   const appProfiles = {
     social: [
       ["TikTok", "Social", 1.9, "#101010", "♪", "tiktok.jpg"], ["Instagram", "Social", 1.15, "#d62976", "IG", "instagram.jpg"],
@@ -140,11 +144,11 @@
     const selectedMinutes = week[selectedIndex];
     let apps = appProfiles[state.profile];
     if (state.profile === "social") {
-      const thirdIndex = state.thirdApp === "random"
-        ? hashSeed(`${state.seed}-sus`) % suspiciousAppPool.length
-        : thirdAppIds.indexOf(state.thirdApp);
-      const suspiciousApp = suspiciousAppPool[thirdIndex];
-      apps = [apps[0], apps[1], suspiciousApp, ...apps.slice(2)];
+      const thirdId = state.thirdApp === "random"
+        ? randomThirdAppIds[hashSeed(`${state.seed}-sus`) % randomThirdAppIds.length]
+        : state.thirdApp;
+      const thirdApp = thirdApps[thirdId];
+      apps = [apps[0], apps[1], thirdApp, ...apps.slice(2).filter((app) => app[0] !== thirdApp[0])];
     }
     const weeklyAppMinutes = Array(apps.length).fill(0);
     let selectedAppMinutes;
